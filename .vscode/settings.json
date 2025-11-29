@@ -23,5 +23,9 @@
     "[json]": {
         "editor.indentSize": 4,
         "editor.tabSize": 4
+    },
+    "[css]": {
+        "editor.indentSize": 4,
+        "editor.tabSize": 4
     }
 }
