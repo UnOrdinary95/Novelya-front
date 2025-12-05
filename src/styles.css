@@ -98,3 +98,13 @@
         @apply bg-background text-foreground;
     }
 }
+
+html,
+body {
+    min-height: 100%;
+    background: var(--background);
+}
+
+button {
+    cursor: pointer;
+}
