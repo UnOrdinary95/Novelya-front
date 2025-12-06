@@ -28,5 +28,6 @@
         "editor.indentSize": 4,
         "editor.tabSize": 4
     },
-    "tailwindCSS.classFunctions": ["hlm", "cva"]
+    "tailwindCSS.classFunctions": ["hlm", "cva"],
+    "tailwindCSS.files.exclude": ["**/hlm-field.ts"]
 }
