@@ -1,0 +1,58 @@
+import { Injectable, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment';
+import { Observable, tap } from 'rxjs';
+import { LoginResponse } from '../../models/loginResponse';
+import { RegisterResponse } from '../../models/registerResponse';
+import { LogoutResponse } from '../../models/logoutResponse';
+import { CurrentUserResponse } from '../../models/currentUserResponse';
+
+@Injectable({
+    providedIn: 'root',
+})
+export class AuthService {
+    private httpClient = inject(HttpClient);
+    private readonly apiUrl = environment.apiUrl;
+
+    currentUserId = signal<string>('');
+    isAuthenticated = signal(false);
+    isAdmin = signal(false);
+
+    login(email: string, password: string): Observable<LoginResponse> {
+        return this.httpClient.post<LoginResponse>(`${this.apiUrl}/login`, { email, password }).pipe(
+            tap(() => this.checkAuth().subscribe()) // Après une connexion réussie, on vérifie l'état d'authentification
+        );
+    }
+
+    register(name: string, email: string, password: string): Observable<RegisterResponse> {
+        return this.httpClient.post<RegisterResponse>(`${this.apiUrl}/register`, { name, email, password });
+    }
+
+    logout(): Observable<LogoutResponse> {
+        return this.httpClient.post<LogoutResponse>(`${this.apiUrl}/logout`, {}).pipe(
+            tap((response) => {
+                if (!environment.production) {
+                    console.log(response.message); // Succès de la déconnexion
+                }
+                // tap est un opérateur RxJS qui permet d'effectuer des side effects sans modifier le flux de données
+                // Ici, la deconnexion a pour side effect de mettre à jour les signaux à false
+                this.isAuthenticated.set(false);
+                this.isAdmin.set(false);
+            })
+        );
+    }
+
+    checkAuth(): Observable<CurrentUserResponse> {
+        return this.httpClient.get<CurrentUserResponse>(`${this.apiUrl}/me`).pipe(
+            tap((response) => {
+                if (response.id) {
+                    this.isAuthenticated.set(true);
+                    this.currentUserId.set(response.id);
+                }
+                if (response.isAdmin) {
+                    this.isAdmin.set(true);
+                }
+            })
+        );
+    }
+}

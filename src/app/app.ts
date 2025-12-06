@@ -3,6 +3,7 @@ import { RouterOutlet } from '@angular/router';
 import { Header } from './shared/components/header/header';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
+import { AuthService } from './core/services/auth/auth.service';
 
 
 @Component({
@@ -12,19 +13,23 @@ import { filter } from 'rxjs';
     styleUrl: './app.css'
 })
 export class App {
-    private router = inject(Router); // Injecting the Router service
-    showHeader = signal(true); // true = show header, false = hide header
+    private router = inject(Router);
+    private authService = inject(AuthService);
+    showHeader = signal(true); // true = afficher header, false = masquer header
 
     constructor() {
-        this.router.events // Observing router events (Observable)
-            // Possible events: 
-            // NavigationStart (navigation begins)
-            // NavigationEnd (navigation succeeds) 
-            // NavigationCancel (navigation canceled, e.g., by guards)
-            // NavigationError (navigation failed)
-            .pipe(filter(event => event instanceof NavigationEnd)) // Only NavigationEnd (successful events)
-            .subscribe(() => { // Subscribe to the filtered events (each event is a NavigationEnd)
-                this.showHeader.set(!this.router.url.startsWith('/auth')); // Hide header if URL starts with /auth
+        this.authService.checkAuth().subscribe(); // Vérifier l'authentification au démarrage de l'application
+
+        this.router.events // Observation des événements du router (Observable)
+            // Événements possibles : 
+            // NavigationStart (navigation commence)
+            // NavigationEnd (navigation réussit) 
+            // NavigationCancel (navigation annulée, ex. par les guards)
+            // NavigationError (navigation échoue)
+            .pipe(filter(event => event instanceof NavigationEnd)) // Seulement NavigationEnd (événements réussis)
+            .subscribe(() => { // S'abonner aux événements filtrés (chaque événement est un NavigationEnd)
+                // Pas de header si on est sur une route d'authentification ou d'erreur
+                this.showHeader.set(!this.router.url.startsWith('/auth') && !this.router.url.startsWith('/error'));
             });
     }
 }
