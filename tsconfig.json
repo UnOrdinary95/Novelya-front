@@ -27,6 +27,18 @@
       ],
       "@spartan-ng/helm/form-field": [
         "./src/app/shared/libs/ui/form-field/src/index.ts"
+      ],
+      "@spartan-ng/helm/field": [
+        "./src/app/shared/libs/ui/field/src/index.ts"
+      ],
+      "@spartan-ng/helm/label": [
+        "./src/app/shared/libs/ui/label/src/index.ts"
+      ],
+      "@spartan-ng/helm/separator": [
+        "./src/app/shared/libs/ui/separator/src/index.ts"
+      ],
+      "@spartan-ng/helm/checkbox": [
+        "./src/app/shared/libs/ui/checkbox/src/index.ts"
       ]
     }
   },
