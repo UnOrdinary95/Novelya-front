@@ -6,6 +6,7 @@ import { LoginResponse } from '../../models/loginResponse';
 import { RegisterResponse } from '../../models/registerResponse';
 import { LogoutResponse } from '../../models/logoutResponse';
 import { CurrentUserResponse } from '../../models/currentUserResponse';
+import { RegisterInput } from '../../models/RegisterInput';
 
 @Injectable({
     providedIn: 'root',
@@ -24,8 +25,8 @@ export class AuthService {
         );
     }
 
-    register(name: string, email: string, password: string): Observable<RegisterResponse> {
-        return this.httpClient.post<RegisterResponse>(`${this.apiUrl}/register`, { name, email, password });
+    register(registerInput: RegisterInput): Observable<RegisterResponse> {
+        return this.httpClient.post<RegisterResponse>(`${this.apiUrl}/register`, registerInput);
     }
 
     logout(): Observable<LogoutResponse> {
