@@ -29,5 +29,5 @@
         "editor.tabSize": 4
     },
     "tailwindCSS.classFunctions": ["hlm", "cva"],
-    "tailwindCSS.files.exclude": ["**/hlm-field.ts"]
+    "tailwindCSS.files.exclude": ["**/hlm-field.ts", "**/hlm-field-label.ts"]
 }
