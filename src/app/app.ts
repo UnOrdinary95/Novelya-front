@@ -4,6 +4,7 @@ import { Header } from './shared/components/header/header';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
 import { AuthService } from './core/services/auth/auth.service';
+import { environment } from '../environments/environment.prod';
 
 
 @Component({
@@ -18,8 +19,6 @@ export class App {
     showHeader = signal(true); // true = afficher header, false = masquer header
 
     constructor() {
-        this.authService.checkAuth().subscribe(); // Vérifier l'authentification au démarrage de l'application
-
         this.router.events // Observation des événements du router (Observable)
             // Événements possibles : 
             // NavigationStart (navigation commence)

@@ -7,8 +7,8 @@
             <ng-icon hlm size="sm" name="lucideSearch" />
         </button>
     </div>
-
-    <div class="flex gap-4">
+    <div class="flex gap-8 items-center">
+        @if (!isAuthenticated()){
         <button hlmBtn routerLink="/auth/register">
             <ng-icon hlm size="sm" name="lucideLogIn" />
             Sign Up
@@ -17,5 +17,12 @@
             <ng-icon hlm size="sm" name="lucideUserPlus" />
             Login
         </button>
+        } @else {
+        <ng-icon hlm name="lucideShoppingCart" />
+        <button hlmBtn (click)="logout()">
+            <ng-icon hlm size="sm" name="lucideLogOut" />
+            Logout
+        </button>
+        }
     </div>
 </header>

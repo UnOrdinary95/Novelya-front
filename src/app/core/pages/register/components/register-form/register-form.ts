@@ -26,6 +26,7 @@ export class RegisterForm {
         terms: new FormControl(false, [Validators.requiredTrue]),
     });
     errorMessage = signal<string>('');
+    isLoading = signal(false);
 
     handleSubmit() {
         if (this.registerForm.valid) {
@@ -35,17 +36,20 @@ export class RegisterForm {
                 password: this.registerForm.value.password!
             };
 
+            this.isLoading.set(true);
             this.authService.register(registerInput).subscribe({
                 next: (response) => {
                     if (!environment.production) {
                         console.log('Registration successful', response);
                     }
+                    this.isLoading.set(false);
                     this.router.navigate(['/auth/login']);
                 },
                 error: (error) => {
                     if (!environment.production) {
                         console.error('Registration error', error);
                     }
+                    this.isLoading.set(false);
                     if (error.status === 400) {
                         this.errorMessage.set('Registration failed please check your input and try again.');
                     }

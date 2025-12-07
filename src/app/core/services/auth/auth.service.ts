@@ -1,12 +1,13 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, catchError, of } from 'rxjs';
 import { LoginResponse } from '../../models/loginResponse';
 import { RegisterResponse } from '../../models/registerResponse';
 import { LogoutResponse } from '../../models/logoutResponse';
 import { CurrentUserResponse } from '../../models/currentUserResponse';
 import { RegisterInput } from '../../models/RegisterInput';
+import { LoginInput } from '../../models/LoginInput';
 
 @Injectable({
     providedIn: 'root',
@@ -19,8 +20,8 @@ export class AuthService {
     isAuthenticated = signal(false);
     isAdmin = signal(false);
 
-    login(email: string, password: string): Observable<LoginResponse> {
-        return this.httpClient.post<LoginResponse>(`${this.apiUrl}/login`, { email, password }).pipe(
+    login(loginInput: LoginInput): Observable<LoginResponse> {
+        return this.httpClient.post<LoginResponse>(`${this.apiUrl}/login`, loginInput).pipe(
             tap(() => this.checkAuth().subscribe()) // Après une connexion réussie, on vérifie l'état d'authentification
         );
     }
@@ -43,8 +44,8 @@ export class AuthService {
         );
     }
 
-    checkAuth(): Observable<CurrentUserResponse> {
-        return this.httpClient.get<CurrentUserResponse>(`${this.apiUrl}/me`).pipe(
+    checkAuth(): Observable<CurrentUserResponse | null> {
+        return this.httpClient.get<CurrentUserResponse>(`${this.apiUrl}/users/me`).pipe(
             tap((response) => {
                 if (response.id) {
                     this.isAuthenticated.set(true);
@@ -53,6 +54,12 @@ export class AuthService {
                 if (response.isAdmin) {
                     this.isAdmin.set(true);
                 }
+            }),
+            catchError(() => {
+                this.isAuthenticated.set(false);
+                this.isAdmin.set(false);
+                this.currentUserId.set('');
+                return of(null); // Retourne un observable de valeur nulle en cas d'erreur
             })
         );
     }

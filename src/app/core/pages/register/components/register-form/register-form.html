@@ -6,7 +6,7 @@
                 Let's get started. Fill in the details below to create your account.
             </p>
             @if (errorMessage()) {
-                <p class="text-red-500 text-sm">{{ errorMessage() }}</p>
+            <p class="text-red-500 text-sm">{{ errorMessage() }}</p>
             }
         </div>
 
@@ -64,13 +64,13 @@
             </div>
 
             @if (registerForm.get('terms')?.invalid && registerForm.get('terms')?.touched) {
-            <p class="text-red-500 text-sm">
-                You must accept the Terms of Service to proceed.
-            </p>
+            <p class="text-red-500 text-sm">You must accept the Terms of Service to proceed.</p>
             }
         </div>
 
-        <button hlmBtn type="submit">Create Account</button>
+        <button hlmBtn type="submit" [disabled]="isLoading()">
+            {{ isLoading() ? 'Creating account...' : 'Sign up' }}
+        </button>
 
         <p class="text-muted-foreground text-sm text-balance text-center">
             Already have an account?
