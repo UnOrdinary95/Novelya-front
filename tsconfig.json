@@ -42,6 +42,9 @@
       ],
       "@spartan-ng/helm/badge": [
         "./src/app/shared/libs/ui/badge/src/index.ts"
+      ],
+      "@spartan-ng/helm/card": [
+        "./src/app/shared/libs/ui/card/src/index.ts"
       ]
     }
   },
