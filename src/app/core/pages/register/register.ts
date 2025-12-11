@@ -7,6 +7,4 @@ import { RegisterForm } from './components/register-form/register-form';
     templateUrl: './register.html',
     styleUrl: './register.css',
 })
-export class Register {
-
-}
+export class Register {}

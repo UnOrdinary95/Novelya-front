@@ -11,5 +11,5 @@ export const routes: Routes = [
     { path: 'auth/register', component: Register },
     { path: 'error/404', component: Error404 },
     { path: 'error/403', component: Error403 },
-    { path: '**', redirectTo: 'error/404' }
+    { path: '**', redirectTo: 'error/404' },
 ];

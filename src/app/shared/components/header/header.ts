@@ -3,7 +3,13 @@ import { HlmButton } from '@spartan-ng/helm/button';
 import { HlmIcon } from '@spartan-ng/helm/icon';
 import { HlmInput } from '@spartan-ng/helm/input';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { lucideLogIn, lucideUserPlus, lucideSearch, lucideLogOut, lucideShoppingCart } from '@ng-icons/lucide';
+import {
+    lucideLogIn,
+    lucideUserPlus,
+    lucideSearch,
+    lucideLogOut,
+    lucideShoppingCart,
+} from '@ng-icons/lucide';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { Router } from '@angular/router';
@@ -13,7 +19,15 @@ import { Router } from '@angular/router';
     imports: [HlmButton, HlmIcon, HlmInput, NgIcon, RouterLink],
     templateUrl: './header.html',
     styleUrl: './header.css',
-    providers: [provideIcons({ lucideLogIn, lucideUserPlus, lucideSearch, lucideLogOut, lucideShoppingCart })],
+    providers: [
+        provideIcons({
+            lucideLogIn,
+            lucideUserPlus,
+            lucideSearch,
+            lucideLogOut,
+            lucideShoppingCart,
+        }),
+    ],
 })
 export class Header {
     private router = inject(Router);
@@ -24,7 +38,7 @@ export class Header {
         this.authService.logout().subscribe({
             next: () => {
                 this.router.navigate(['/']);
-            }
+            },
         });
     }
 }

@@ -6,12 +6,11 @@ import { filter } from 'rxjs';
 import { AuthService } from './core/services/auth/auth.service';
 import { environment } from '../environments/environment.prod';
 
-
 @Component({
     selector: 'app-root',
     imports: [RouterOutlet, Header],
     templateUrl: './app.html',
-    styleUrl: './app.css'
+    styleUrl: './app.css',
 })
 export class App {
     private router = inject(Router);
@@ -20,15 +19,18 @@ export class App {
 
     constructor() {
         this.router.events // Observation des événements du router (Observable)
-            // Événements possibles : 
+            // Événements possibles :
             // NavigationStart (navigation commence)
-            // NavigationEnd (navigation réussit) 
+            // NavigationEnd (navigation réussit)
             // NavigationCancel (navigation annulée, ex. par les guards)
             // NavigationError (navigation échoue)
-            .pipe(filter(event => event instanceof NavigationEnd)) // Seulement NavigationEnd (événements réussis)
-            .subscribe(() => { // S'abonner aux événements filtrés (chaque événement est un NavigationEnd)
+            .pipe(filter((event) => event instanceof NavigationEnd)) // Seulement NavigationEnd (événements réussis)
+            .subscribe(() => {
+                // S'abonner aux événements filtrés (chaque événement est un NavigationEnd)
                 // Pas de header si on est sur une route d'authentification ou d'erreur
-                this.showHeader.set(!this.router.url.startsWith('/auth') && !this.router.url.startsWith('/error'));
+                this.showHeader.set(
+                    !this.router.url.startsWith('/auth') && !this.router.url.startsWith('/error'),
+                );
             });
     }
 }

@@ -22,7 +22,7 @@ export class AuthService {
 
     login(loginInput: LoginInput): Observable<LoginResponse> {
         return this.httpClient.post<LoginResponse>(`${this.apiUrl}/login`, loginInput).pipe(
-            tap(() => this.checkAuth().subscribe()) // Après une connexion réussie, on vérifie l'état d'authentification
+            tap(() => this.checkAuth().subscribe()), // Après une connexion réussie, on vérifie l'état d'authentification
         );
     }
 
@@ -40,7 +40,7 @@ export class AuthService {
                 // Ici, la deconnexion a pour side effect de mettre à jour les signaux à false
                 this.isAuthenticated.set(false);
                 this.isAdmin.set(false);
-            })
+            }),
         );
     }
 
@@ -60,7 +60,7 @@ export class AuthService {
                 this.isAdmin.set(false);
                 this.currentUserId.set('');
                 return of(null); // Retourne un observable de valeur nulle en cas d'erreur
-            })
+            }),
         );
     }
 }

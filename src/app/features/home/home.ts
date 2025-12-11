@@ -7,6 +7,4 @@ import { GenreCard } from './components/genre-card/genre-card';
     templateUrl: './home.html',
     styleUrl: './home.css',
 })
-export class Home {
-
-}
+export class Home {}

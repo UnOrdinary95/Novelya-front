@@ -4,6 +4,4 @@ import { Component } from '@angular/core';
     selector: 'app-error403',
     templateUrl: './error403.html',
 })
-export class Error403 {
-
-}
+export class Error403 {}

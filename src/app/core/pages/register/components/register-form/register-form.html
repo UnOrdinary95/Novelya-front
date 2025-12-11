@@ -6,7 +6,7 @@
                 Let's get started. Fill in the details below to create your account.
             </p>
             @if (errorMessage()) {
-            <p class="text-red-500 text-sm">{{ errorMessage() }}</p>
+                <p class="text-red-500 text-sm">{{ errorMessage() }}</p>
             }
         </div>
 
@@ -17,7 +17,7 @@
                 Name must contain only letters, hyphens, and underscores.
             </p>
             @if (registerForm.get('name')?.invalid && registerForm.get('name')?.touched) {
-            <p class="text-red-500 text-sm">Name is required and must be valid.</p>
+                <p class="text-red-500 text-sm">Name is required and must be valid.</p>
             }
         </hlm-field>
 
@@ -31,7 +31,7 @@
                 required
             />
             @if (registerForm.get('email')?.invalid && registerForm.get('email')?.touched) {
-            <p class="text-red-500 text-sm">Please enter a valid email address.</p>
+                <p class="text-red-500 text-sm">Please enter a valid email address.</p>
             }
         </hlm-field>
 
@@ -48,7 +48,7 @@
                 Minimum 8 characters, including at least one uppercase and one lowercase letter.
             </p>
             @if (registerForm.get('password')?.invalid && registerForm.get('password')?.touched) {
-            <p class="text-red-500 text-sm">Password does not meet the requirements.</p>
+                <p class="text-red-500 text-sm">Password does not meet the requirements.</p>
             }
         </hlm-field>
 
@@ -64,7 +64,7 @@
             </div>
 
             @if (registerForm.get('terms')?.invalid && registerForm.get('terms')?.touched) {
-            <p class="text-red-500 text-sm">You must accept the Terms of Service to proceed.</p>
+                <p class="text-red-500 text-sm">You must accept the Terms of Service to proceed.</p>
             }
         </div>
 

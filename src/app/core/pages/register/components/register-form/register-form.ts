@@ -3,7 +3,7 @@ import { HlmField, HlmFieldGroup, HlmFieldLabel } from '@spartan-ng/helm/field';
 import { HlmInput } from '@spartan-ng/helm/input';
 import { HlmCheckbox } from '@spartan-ng/helm/checkbox';
 import { HlmButton } from '@spartan-ng/helm/button';
-import { RouterLink } from "@angular/router";
+import { RouterLink } from '@angular/router';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../../services/auth/auth.service';
@@ -12,7 +12,16 @@ import { environment } from '../../../../../../environments/environment';
 
 @Component({
     selector: 'app-register-form',
-    imports: [HlmField, HlmFieldGroup, HlmFieldLabel, HlmInput, HlmCheckbox, HlmButton, RouterLink, ReactiveFormsModule],
+    imports: [
+        HlmField,
+        HlmFieldGroup,
+        HlmFieldLabel,
+        HlmInput,
+        HlmCheckbox,
+        HlmButton,
+        RouterLink,
+        ReactiveFormsModule,
+    ],
     templateUrl: './register-form.html',
     styleUrl: './register-form.css',
 })
@@ -20,9 +29,16 @@ export class RegisterForm {
     private router = inject(Router);
     private authService = inject(AuthService);
     registerForm = new FormGroup({
-        name: new FormControl('', [Validators.required, Validators.minLength(3), Validators.pattern('^[a-zA-Z_\\- ]+$')]),
+        name: new FormControl('', [
+            Validators.required,
+            Validators.minLength(3),
+            Validators.pattern('^[a-zA-Z_\\- ]+$'),
+        ]),
         email: new FormControl('', [Validators.required, Validators.email]),
-        password: new FormControl('', [Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z]).{8,}$')]),
+        password: new FormControl('', [
+            Validators.required,
+            Validators.pattern('^(?=.*[a-z])(?=.*[A-Z]).{8,}$'),
+        ]),
         terms: new FormControl(false, [Validators.requiredTrue]),
     });
     errorMessage = signal<string>('');
@@ -33,7 +49,7 @@ export class RegisterForm {
             const registerInput: RegisterInput = {
                 name: this.registerForm.value.name!,
                 email: this.registerForm.value.email!,
-                password: this.registerForm.value.password!
+                password: this.registerForm.value.password!,
             };
 
             this.isLoading.set(true);
@@ -51,15 +67,17 @@ export class RegisterForm {
                     }
                     this.isLoading.set(false);
                     if (error.status === 400) {
-                        this.errorMessage.set('Registration failed please check your input and try again.');
-                    }
-                    else if (error.status === 409) {
+                        this.errorMessage.set(
+                            'Registration failed please check your input and try again.',
+                        );
+                    } else if (error.status === 409) {
                         this.errorMessage.set('An account with this email already exists.');
+                    } else {
+                        this.errorMessage.set(
+                            'An unexpected error occurred. Please try again later.',
+                        );
                     }
-                    else {
-                        this.errorMessage.set('An unexpected error occurred. Please try again later.');
-                    }
-                }
+                },
             });
         }
     }

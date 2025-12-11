@@ -11,7 +11,15 @@ import { environment } from '../../../../../../environments/environment';
 
 @Component({
     selector: 'app-login-form',
-    imports: [HlmField, HlmFieldGroup, HlmFieldLabel, HlmInput, HlmButton, RouterLink, ReactiveFormsModule],
+    imports: [
+        HlmField,
+        HlmFieldGroup,
+        HlmFieldLabel,
+        HlmInput,
+        HlmButton,
+        RouterLink,
+        ReactiveFormsModule,
+    ],
     templateUrl: './login-form.html',
     styleUrl: './login-form.css',
 })

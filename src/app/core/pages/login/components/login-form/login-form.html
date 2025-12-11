@@ -6,7 +6,7 @@
                 Welcome back! Please enter your details to log in.
             </p>
             @if (errorMessage()) {
-            <p class="text-red-500 text-sm">{{ errorMessage() }}</p>
+                <p class="text-red-500 text-sm">{{ errorMessage() }}</p>
             }
         </div>
 
@@ -20,7 +20,7 @@
                 required
             />
             @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
-            <p class="text-red-500 text-sm">Please enter a valid email address.</p>
+                <p class="text-red-500 text-sm">Please enter a valid email address.</p>
             }
         </hlm-field>
 
@@ -28,7 +28,7 @@
             <label hlmFieldLabel for="password">Password</label>
             <input hlmInput type="password" placeholder="" formControlName="password" required />
             @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
-            <p class="text-red-500 text-sm">Password is required.</p>
+                <p class="text-red-500 text-sm">Password is required.</p>
             }
         </hlm-field>
 

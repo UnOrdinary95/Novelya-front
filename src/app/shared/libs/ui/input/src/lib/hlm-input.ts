@@ -59,7 +59,11 @@ export class HlmInput implements BrnFormFieldControl, DoCheck {
 
     public readonly userClass = input<ClassValue>('', { alias: 'class' });
     protected readonly _computedClass = computed(() =>
-        hlm(inputVariants({ error: this._state().error }), this.userClass(), this._additionalClasses()),
+        hlm(
+            inputVariants({ error: this._state().error }),
+            this.userClass(),
+            this._additionalClasses(),
+        ),
     );
 
     public readonly error = input<InputVariants['error']>('auto');
@@ -82,7 +86,10 @@ export class HlmInput implements BrnFormFieldControl, DoCheck {
             const error = this._errorStateTracker.errorState();
             untracked(() => {
                 if (this.ngControl) {
-                    const shouldShowError = error && this.ngControl.invalid && (this.ngControl.touched || this.ngControl.dirty);
+                    const shouldShowError =
+                        error &&
+                        this.ngControl.invalid &&
+                        (this.ngControl.touched || this.ngControl.dirty);
                     this._errorStateTracker.errorState.set(shouldShowError ? true : false);
                     this.setError(shouldShowError ? true : 'auto');
                 }

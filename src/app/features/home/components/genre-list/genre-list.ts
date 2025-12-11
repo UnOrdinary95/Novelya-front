@@ -7,6 +7,4 @@ import { GenreCard } from '../genre-card/genre-card';
     templateUrl: './genre-list.html',
     styleUrl: './genre-list.css',
 })
-export class GenreList {
-
-}
+export class GenreList {}
