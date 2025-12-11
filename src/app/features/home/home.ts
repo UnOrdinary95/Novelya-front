@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { GenreCard } from './components/genre-card/genre-card';
+import { GenreList } from './components/genre-list/genre-list';
 
 @Component({
     selector: 'app-home',
-    imports: [GenreCard],
+    imports: [GenreList],
     templateUrl: './home.html',
     styleUrl: './home.css',
 })
