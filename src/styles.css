@@ -9,6 +9,13 @@
 
 @import '@spartan-ng/brain/hlm-tailwind-preset.css';
 
+@font-face {
+    font-family: 'HussarBoldOutline';
+    src: url('/font/HussarBoldOutline.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 :root {
     color-scheme: light;
 

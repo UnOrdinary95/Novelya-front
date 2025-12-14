@@ -1,3 +1,15 @@
-<div>
-    <app-genre-list></app-genre-list>
+<div
+    class="h-full flex flex-col gap-10 items-center justify-center relative bg-cover bg-center bg-no-repeat"
+    [style.backgroundImage]="'url(' + currentUrl() + ')'"
+>
+    <div class="absolute inset-0 bg-black/65"></div>
+    <div class="flex flex-col items-center gap-6 z-10 text-center">
+        <h1 class="text-6xl font-[HussarBoldOutline] text-primary">NOVELYA</h1>
+        <p class="text-lg text-white/90 max-w-md">Votre boutique de light novels en ligne.</p>
+        <div class="flex items-center gap-2">
+            <ng-icon hlm name="lucideBookOpen" size="25" />
+            <h2 class="font-extrabold text-2xl text-white">Explorez par genres</h2>
+        </div>
+    </div>
+    <app-genre-list (genreHovered)="updateBackground($event)"></app-genre-list>
 </div>
