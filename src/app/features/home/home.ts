@@ -2,10 +2,12 @@ import { Component, signal } from '@angular/core';
 import { GenreList } from './components/genre-list/genre-list';
 import { lucideBookOpen } from '@ng-icons/lucide';
 import { NgIcon, provideIcons } from '@ng-icons/core';
+import { LightnovelItem } from '../lightnovel/components/lightnovel-item/lightnovel-item';
+import { LightNovel } from '../../core/models/LightNovel';
 
 @Component({
     selector: 'app-home',
-    imports: [GenreList, NgIcon],
+    imports: [GenreList, NgIcon, LightnovelItem],
     templateUrl: './home.html',
     styleUrl: './home.css',
     providers: [
@@ -16,6 +18,28 @@ import { NgIcon, provideIcons } from '@ng-icons/core';
 })
 export class Home {
     currentUrl = signal<string>('/genres/action.jpg');
+    lightNovels = signal<LightNovel[]>([
+        {
+            id: 1,
+            title: 'That Time I Got Reincarnated as a Slime Slime Slime Slime Slime Slime Slime Slime Slime Slime Slime Slime',
+            author: 'Fuse',
+            price: 12.99,
+            description: 'Un homme ordinaire se réincarne en Slime après avoir été tué.',
+            cover: '/genres/fantasy.jpg',
+            genres: ['Fantasy', 'Adventure'],
+            stock: 5,
+        },
+        {
+            id: 2,
+            title: 'Solo Leveling',
+            author: 'Chugong',
+            price: 14.99,
+            description: 'Un chasseur faible découvre un mystérieux système.',
+            cover: '/genres/sci-fi.jpg',
+            genres: ['Action', 'Fantasy'],
+            stock: 0,
+        },
+    ]);
 
     // $event est la valeur émise par le output (ici, une URL d'image)
     updateBackground(imageUrl: string) {

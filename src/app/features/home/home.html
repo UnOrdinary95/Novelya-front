@@ -13,3 +13,13 @@
     </div>
     <app-genre-list (genreHovered)="updateBackground($event)"></app-genre-list>
 </div>
+
+<!-- Light Novels Grid -->
+<section class="w-full max-w-7xl mx-auto px-4 py-16">
+    <h2 class="text-3xl font-bold mb-8">Nouveautés</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        @for (novel of lightNovels(); track novel.id) {
+            <app-lightnovel-item [lightNovel]="novel"></app-lightnovel-item>
+        }
+    </div>
+</section>
