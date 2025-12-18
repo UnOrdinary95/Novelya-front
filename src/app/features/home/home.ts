@@ -2,12 +2,12 @@ import { Component, signal } from '@angular/core';
 import { GenreList } from './components/genre-list/genre-list';
 import { lucideBookOpen } from '@ng-icons/lucide';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { LightnovelItem } from '../lightnovel/components/lightnovel-item/lightnovel-item';
+import { LightnovelList } from '../lightnovel/components/lightnovel-list/lightnovel-list';
 import { LightNovel } from '../../core/models/LightNovel';
 
 @Component({
     selector: 'app-home',
-    imports: [GenreList, NgIcon, LightnovelItem],
+    imports: [GenreList, NgIcon, LightnovelList],
     templateUrl: './home.html',
     styleUrl: './home.css',
     providers: [
