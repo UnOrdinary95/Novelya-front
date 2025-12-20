@@ -1,9 +1,13 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { GenreList } from './components/genre-list/genre-list';
 import { lucideBookOpen } from '@ng-icons/lucide';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { LightnovelList } from '../lightnovel/components/lightnovel-list/lightnovel-list';
 import { LightNovel } from '../../core/models/LightNovel';
+import { LightNovelService } from '../../core/services/lightnovel/lightnovel.service';
+import { environment } from '../../../environments/environment';
+import { catchError, of } from 'rxjs';
 
 @Component({
     selector: 'app-home',
@@ -18,28 +22,46 @@ import { LightNovel } from '../../core/models/LightNovel';
 })
 export class Home {
     currentUrl = signal<string>('/genres/action.jpg');
-    lightNovels = signal<LightNovel[]>([
-        {
-            _id: '1',
-            title: 'That Time I Got Reincarnated as a Slime Slime Slime Slime Slime Slime Slime Slime Slime Slime Slime Slime',
-            author: 'Fuse',
-            price: 12.99,
-            description: 'Un homme ordinaire se réincarne en Slime après avoir été tué.',
-            cover: '/genres/fantasy.jpg',
-            genres: ['Fantasy', 'Adventure'],
-            inStock: true,
-        },
-        {
-            _id: '2',
-            title: 'Solo Leveling',
-            author: 'Chugong',
-            price: 14.99,
-            description: 'Un chasseur faible découvre un mystérieux système.',
-            cover: '/genres/sci-fi.jpg',
-            genres: ['Action', 'Fantasy'],
-            inStock: false,
-        },
-    ]);
+    private lightNovelService = inject(LightNovelService);
+
+    // toSignal() convertit automatiquement l'Observable en Signal
+    // Plus besoin de ngOnInit, loadLightNovels(), subscribe(), etc.
+    lightNovels = toSignal(
+        this.lightNovelService.getLightNovels().pipe(
+            catchError((error) => {
+                if (!environment.production) {
+                    console.error(error);
+                }
+                return of([]); // Retourne un tableau vide en cas d'erreur
+            })
+        ),
+        { initialValue: [] as LightNovel[] }
+    );
+
+    /*
+    // ===== ANCIENNE VERSION (avec subscribe manuel) =====
+    // Gardée en commentaire pour référence
+
+    lightNovels = signal<LightNovel[]>([]);
+
+    ngOnInit(): void {
+        this.loadLightNovels();
+    }
+
+    loadLightNovels(): void {
+        this.lightNovelService.getLightNovels().subscribe({
+            next: (lightNovels) => {
+                this.lightNovels.set(lightNovels);
+            },
+            error: (error) => {
+                if (!environment.production) {
+                    console.error(error);
+                }
+            }
+        });
+    }
+    // ===== FIN ANCIENNE VERSION =====
+    */
 
     // $event est la valeur émise par le output (ici, une URL d'image)
     updateBackground(imageUrl: string) {
