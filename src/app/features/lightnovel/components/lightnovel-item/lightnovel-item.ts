@@ -23,8 +23,5 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
 })
 export class LightnovelItem {
     lightNovel = input.required<LightNovel>();
-    isOutOfStock = computed(() => {
-        const stock = this.lightNovel().stock;
-        return stock !== undefined && stock === 0;
-    });
+    isOutOfStock = computed(() => !this.lightNovel().inStock);
 }

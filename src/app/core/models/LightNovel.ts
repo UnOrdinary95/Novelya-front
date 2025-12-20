@@ -1,11 +1,11 @@
 export interface LightNovel {
-    id: number;
+    _id?: string;
     title: string;
     author: string;
     price: number;
-    description: string;
+    inStock: boolean;
     cover: string;
-    genres?: string[];
+    description: string;
+    genres: string[];
     releaseDate?: Date;
-    stock?: number;
 }

@@ -8,7 +8,7 @@
 
         @if (isOutOfStock()) {
             <div class="absolute left-2 top-2 z-10">
-                <span hlmBadge variant="destructive">Rupture de stock</span>
+                <span hlmBadge variant="destructive">Out of Stock</span>
             </div>
         }
 
@@ -58,12 +58,12 @@
                                 d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"
                             ></path>
                         </svg>
-                        Rupture de stock
+                        Out of Stock
                     </button>
                 } @else {
                     <button
                         class="w-full rounded-none bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity duration-200 hover:opacity-90"
-                        [attr.aria-label]="'Ajouter ' + lightNovel().title + ' au panier'"
+                        [attr.aria-label]="'Add ' + lightNovel().title + ' to cart'"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -83,7 +83,7 @@
                                 d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"
                             ></path>
                         </svg>
-                        Ajouter au panier
+                        Add to cart
                     </button>
                 }
             </div>

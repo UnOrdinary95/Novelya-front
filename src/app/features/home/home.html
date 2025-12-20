@@ -5,16 +5,16 @@
 >
     <div class="absolute inset-0 bg-black/65"></div>
     <div class="flex flex-col items-center gap-6 z-10 text-center">
-        <p class="text-lg text-white/90 max-w-md">Votre boutique de light novels en ligne.</p>
+        <p class="text-lg text-white/90 max-w-md">Your online light novel shop.</p>
         <div class="flex items-center gap-2">
             <ng-icon hlm name="lucideBookOpen" size="25" />
-            <h2 class="font-extrabold text-2xl text-white">Explorez par genres</h2>
+            <h2 class="font-extrabold text-2xl text-white">Explore by genres</h2>
         </div>
     </div>
     <app-genre-list (genreHovered)="updateBackground($event)"></app-genre-list>
 </div>
 
 <section class="w-full max-w-7xl mx-auto px-4 py-16">
-    <h2 class="text-3xl font-bold mb-8">Catalogue complet</h2>
+    <h2 class="text-3xl font-bold mb-8">Full Catalog</h2>
     <app-lightnovel-list [lightNovels]="lightNovels()"></app-lightnovel-list>
 </section>
