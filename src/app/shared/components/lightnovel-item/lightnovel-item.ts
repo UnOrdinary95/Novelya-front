@@ -2,7 +2,7 @@ import { Component, input, computed, ChangeDetectionStrategy } from '@angular/co
 import { CommonModule, CurrencyPipe } from '@angular/common';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { HlmCardImports } from '@spartan-ng/helm/card';
-import { LightNovel } from '../../../../core/models/LightNovel';
+import { LightNovel } from '@core/models/LightNovel';
 import { lucideStar, lucideShoppingCart } from '@ng-icons/lucide';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { HlmButton } from '@spartan-ng/helm/button';

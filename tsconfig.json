@@ -23,7 +23,13 @@
             "@spartan-ng/helm/separator": ["./src/app/shared/libs/ui/separator/src/index.ts"],
             "@spartan-ng/helm/checkbox": ["./src/app/shared/libs/ui/checkbox/src/index.ts"],
             "@spartan-ng/helm/badge": ["./src/app/shared/libs/ui/badge/src/index.ts"],
-            "@spartan-ng/helm/card": ["./src/app/shared/libs/ui/card/src/index.ts"]
+            "@spartan-ng/helm/card": ["./src/app/shared/libs/ui/card/src/index.ts"],
+            "@/*": ["./src/*"],
+            "@app/*": ["./src/app/*"],
+            "@core/*": ["./src/app/core/*"],
+            "@shared/*": ["./src/app/shared/*"],
+            "@features/*": ["./src/app/features/*"],
+            "@environments/*": ["./src/environments/*"]
         }
     },
     "angularCompilerOptions": {

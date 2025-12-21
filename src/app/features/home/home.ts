@@ -3,10 +3,10 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { GenreList } from './components/genre-list/genre-list';
 import { lucideBookOpen } from '@ng-icons/lucide';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { LightnovelList } from '../lightnovel/components/lightnovel-list/lightnovel-list';
-import { LightNovel } from '../../core/models/LightNovel';
-import { LightNovelService } from '../../core/services/lightnovel/lightnovel.service';
-import { environment } from '../../../environments/environment';
+import { LightnovelList } from '@shared/components/lightnovel-list/lightnovel-list';
+import { LightNovel } from '@core/models/LightNovel';
+import { LightNovelService } from '@core/services/lightnovel/lightnovel.service';
+import { environment } from '@environments/environment';
 import { catchError, of } from 'rxjs';
 
 @Component({

@@ -1,5 +1,5 @@
 import { Component, input, ChangeDetectionStrategy } from '@angular/core';
-import { LightNovel } from '../../../../core/models/LightNovel';
+import { LightNovel } from '@core/models/LightNovel';
 import { LightnovelItem } from '../lightnovel-item/lightnovel-item';
 
 @Component({
