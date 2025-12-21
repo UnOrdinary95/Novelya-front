@@ -14,4 +14,8 @@ export class LightNovelService {
     getLightNovels(): Observable<LightNovel[]> {
         return this.http.get<LightNovel[]>(`${this.apiUrl}/lightnovels`);
     }
+
+    getLightNovelsByGenre(genreName: string): Observable<LightNovel[]> {
+        return this.http.get<LightNovel[]>(`${this.apiUrl}/lightnovels/genre/${genreName.toLowerCase()}`);
+    }
 }

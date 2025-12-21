@@ -9,3 +9,5 @@ export interface LightNovel {
     genres: string[];
     releaseDate?: Date;
 }
+
+export const availableGenres = ["action", "adventure", "comedy", "drama", "fantasy", "horror", "mystery", "romance", "sci-fi", "slice-of-life", "supernatural"];
