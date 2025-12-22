@@ -19,7 +19,7 @@ export class Genre {
     private router = inject(Router);
     private lightNovelService = inject(LightNovelService);
 
-    genreName = input.required<string>();
+    genreName = input.required<string>(); // Depuis l'URL
     genreNameFormatted = computed(() => {
         const route = this.genreName();
         return genreRouteToName[route] ?? route;

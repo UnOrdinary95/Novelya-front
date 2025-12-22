@@ -18,4 +18,8 @@ export class LightNovelService {
     getLightNovelsByGenre(genreName: string): Observable<LightNovel[]> {
         return this.http.get<LightNovel[]>(`${this.apiUrl}/lightnovels/genre/${genreName.toLowerCase()}`);
     }
+
+    getLightNovelsByName(name: string): Observable<LightNovel[]> {
+        return this.http.get<LightNovel[]>(`${this.apiUrl}/lightnovels/search/${name}`);
+    }
 }

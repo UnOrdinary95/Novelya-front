@@ -1,20 +1,31 @@
 <header class="flex items-center justify-between px-8 border-b">
-    <img class="w-16 h-16" src="novelya-icon.jpg" alt="" />
-
-    <div class="flex w-full max-w-lg items-center gap-2">
-        <input class="w-full" hlmInput type="email" placeholder="Search for a light novel" />
-        <button hlmBtn size="icon" variant="outline" class="">
+    <a routerLink="/">
+        <img class="w-16 h-16 cursor-pointer" src="novelya-icon.jpg" alt="Novelya - Accueil" />
+    </a>
+    <form
+        [formGroup]="searchForm"
+        (ngSubmit)="onSubmit()"
+        class="flex w-full max-w-lg items-center gap-2"
+    >
+        <input
+            class="w-full"
+            formControlName="searchQuery"
+            hlmInput
+            type="text"
+            placeholder="Search for a light novel"
+        />
+        <button hlmBtn size="icon" variant="outline" type="submit">
             <ng-icon hlm size="sm" name="lucideSearch" />
         </button>
-    </div>
+    </form>
     <div class="flex gap-8 items-center">
         @if (!isAuthenticated()) {
             <button hlmBtn routerLink="/auth/register">
-                <ng-icon hlm size="sm" name="lucideLogIn" />
+                <ng-icon hlm size="sm" name="lucideUserPlus" />
                 Sign Up
             </button>
             <button hlmBtn routerLink="/auth/login">
-                <ng-icon hlm size="sm" name="lucideUserPlus" />
+                <ng-icon hlm size="sm" name="lucideLogIn" />
                 Login
             </button>
         } @else {

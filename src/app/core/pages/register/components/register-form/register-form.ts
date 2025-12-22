@@ -47,8 +47,8 @@ export class RegisterForm {
     handleSubmit() {
         if (this.registerForm.valid) {
             const registerInput: RegisterInput = {
-                name: this.registerForm.value.name!,
-                email: this.registerForm.value.email!,
+                name: this.registerForm.value.name!.trim(),
+                email: this.registerForm.value.email!.trim(),
                 password: this.registerForm.value.password!,
             };
 
