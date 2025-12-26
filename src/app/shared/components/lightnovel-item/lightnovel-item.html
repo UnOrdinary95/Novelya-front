@@ -1,9 +1,12 @@
 <div hlmCard class="relative overflow-hidden py-0 gap-2">
-    <div class="group relative h-[400px] overflow-hidden bg-muted">
+    <a
+        [routerLink]="['/lightnovel', lightNovel()._id]"
+        class="group relative h-[400px] overflow-hidden bg-muted block cursor-pointer"
+    >
         <img
             [src]="lightNovel().cover"
             [alt]="lightNovel().title"
-            class="h-full w-full object-cover"
+            class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
 
         @if (isOutOfStock()) {
@@ -17,14 +20,19 @@
             size="icon"
             variant="secondary"
             class="size-8 absolute right-2 top-2 z-10 rounded-full bg-background/80 p-2 opacity-0 transition-opacity duration-300 hover:bg-background group-hover:opacity-100"
+            (click)="$event.preventDefault(); $event.stopPropagation()"
         >
             <ng-icon hlm size="sm" name="lucideStar" />
         </button>
-    </div>
+    </a>
 
     <div class="px-4 py-2 flex flex-col gap-2">
         <div class="h-24">
-            <h3 class="line-clamp-3 text-lg font-bold">{{ lightNovel().title }}</h3>
+            <a
+                [routerLink]="['/lightnovel', lightNovel()._id]"
+                class="line-clamp-3 text-lg font-bold hover:text-primary transition-colors cursor-pointer"
+                >{{ lightNovel().title }}</a
+            >
         </div>
 
         <div class="space-y-1.5">

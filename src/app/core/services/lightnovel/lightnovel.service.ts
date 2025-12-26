@@ -22,4 +22,8 @@ export class LightNovelService {
     getLightNovelsByName(name: string): Observable<LightNovel[]> {
         return this.http.get<LightNovel[]>(`${this.apiUrl}/lightnovels/search/${name}`);
     }
+
+    getLightNovelById(id: string): Observable<LightNovel> {
+        return this.http.get<LightNovel>(`${this.apiUrl}/lightnovels/${id}`);
+    }
 }

@@ -1,0 +1,94 @@
+@if (lightNovel(); as ln) {
+    <section class="w-full max-w-7xl mx-auto px-4 py-8">
+        <button hlmBtn variant="ghost" class="mb-6 gap-2" (click)="goBack()">
+            <ng-icon hlm size="sm" name="lucideArrowLeft" />
+            Back
+        </button>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+            <div class="relative group">
+                <div
+                    class="relative aspect-2/3 w-full max-w-md mx-auto lg:mx-0 overflow-hidden rounded-lg shadow-2xl"
+                >
+                    <img [src]="ln.cover" [alt]="ln.title" class="h-full w-full object-cover" />
+                    @if (isOutOfStock()) {
+                        <div class="absolute left-4 top-4 z-10">
+                            <span hlmBadge variant="destructive" class="text-sm px-3 py-1"
+                                >Out of Stock</span
+                            >
+                        </div>
+                    }
+                    <button
+                        hlmBtn
+                        size="icon"
+                        variant="secondary"
+                        class="size-10 absolute right-4 top-4 z-10 rounded-full bg-background/80 p-2 opacity-0 transition-opacity duration-300 hover:bg-background group-hover:opacity-100"
+                    >
+                        <ng-icon hlm size="sm" name="lucideStar" />
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex flex-col gap-6">
+                <h1 class="text-3xl lg:text-4xl font-bold leading-tight">{{ ln.title }}</h1>
+                <div class="flex items-center gap-2 text-muted-foreground">
+                    <ng-icon hlm size="sm" name="lucideUser" />
+                    <span class="text-lg">{{ ln.author }}</span>
+                </div>
+
+                <p class="text-3xl font-bold text-primary">
+                    {{ ln.price | currency: 'EUR' : '' : '1.2-2' }} €
+                </p>
+                @if (ln.releaseDate) {
+                    <div class="flex items-center gap-2 text-muted-foreground">
+                        <ng-icon hlm size="sm" name="lucideCalendar" />
+                        <span>{{ ln.releaseDate | date: 'longDate' }}</span>
+                    </div>
+                }
+
+                @if (ln.genres && ln.genres.length > 0) {
+                    <div class="flex flex-wrap gap-2">
+                        @for (genre of ln.genres; track genre) {
+                            <a
+                                [routerLink]="['/genre', getGenreRoute(genre)]"
+                                hlmBadge
+                                variant="secondary"
+                                class="capitalize cursor-pointer hover:bg-secondary/80 transition-colors"
+                                >{{ genre }}</a
+                            >
+                        }
+                    </div>
+                }
+
+                <div class="space-y-2">
+                    <h2 class="text-xl font-semibold">Description</h2>
+                    <p class="text-muted-foreground leading-relaxed">{{ ln.description }}</p>
+                </div>
+                <div class="mt-4">
+                    @if (isOutOfStock()) {
+                        <button
+                            disabled
+                            class="w-full sm:w-auto cursor-not-allowed rounded-md bg-muted px-8 py-3 text-base font-medium text-muted-foreground flex items-center justify-center gap-2"
+                        >
+                            <ng-icon hlm size="sm" name="lucideShoppingCart" />
+                            Out of Stock
+                        </button>
+                    } @else {
+                        <button
+                            hlmBtn
+                            class="w-full sm:w-auto px-8 py-3 text-base gap-2"
+                            [attr.aria-label]="'Add ' + ln.title + ' to cart'"
+                        >
+                            <ng-icon hlm size="sm" name="lucideShoppingCart" />
+                            Add to cart
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+} @else {
+    <section class="w-full max-w-7xl mx-auto px-4 py-16 flex justify-center">
+        <div class="animate-pulse text-muted-foreground">Loading...</div>
+    </section>
+}

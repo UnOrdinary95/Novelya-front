@@ -1,5 +1,6 @@
 import { Component, input, computed, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { LightNovel } from '@core/models/LightNovel';
@@ -10,7 +11,7 @@ import { HlmIcon } from '@spartan-ng/helm/icon';
 
 @Component({
     selector: 'app-lightnovel-item',
-    imports: [CommonModule, CurrencyPipe, HlmBadgeImports, HlmCardImports, NgIcon, HlmButton, HlmIcon],
+    imports: [CommonModule, CurrencyPipe, RouterLink, HlmBadgeImports, HlmCardImports, NgIcon, HlmButton, HlmIcon],
     templateUrl: './lightnovel-item.html',
     styleUrl: './lightnovel-item.css',
     changeDetection: ChangeDetectionStrategy.OnPush,

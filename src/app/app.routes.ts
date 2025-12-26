@@ -6,11 +6,13 @@ import { Error403 } from './core/pages/error/error403/error403';
 import { Home } from './features/home/home';
 import { Genre } from './features/genre/genre';
 import { Search } from './features/search/search';
+import { Lightnovel } from './features/lightnovel/lightnovel';
 
 export const routes: Routes = [
     { path: '', component: Home },
     { path: 'genre/:genreName', component: Genre },
     { path: 'search/:searchQuery', component: Search },
+    { path: 'lightnovel/:id', component: Lightnovel },
     { path: 'auth/login', component: Login },
     { path: 'auth/register', component: Register },
     { path: 'error/404', component: Error404 },
