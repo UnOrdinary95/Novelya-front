@@ -1,9 +1,10 @@
 import { Injectable, effect, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { User } from '../../models/User';
 import { environment } from '@environments/environment';
 import { AuthService } from '../auth/auth.service';
+import { ApiResponse } from '../../models/ApiResponse';
 
 @Injectable({
     providedIn: 'root',
@@ -39,5 +40,11 @@ export class UserService {
 
     getMe(): Observable<User> {
         return this.http.get<User>(`${this.apiUrl}/users/me`);
+    }
+
+    updatePurchaseHistory(): Observable<ApiResponse> {
+        return this.http.patch<ApiResponse>(`${this.apiUrl}/users/${this.currentUser()?._id}/history`, {}).pipe(
+            tap(() => this.refreshCurrentUser())
+        );
     }
 }

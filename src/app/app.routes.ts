@@ -7,12 +7,15 @@ import { Home } from './features/home/home';
 import { Genre } from './features/genre/genre';
 import { Search } from './features/search/search';
 import { Lightnovel } from './features/lightnovel/lightnovel';
+import { Cart } from './features/cart/cart';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
     { path: '', component: Home },
     { path: 'genre/:genreName', component: Genre },
     { path: 'search/:searchQuery', component: Search },
     { path: 'lightnovel/:id', component: Lightnovel },
+    { path: 'cart', component: Cart, canActivate: [authGuard] },
     { path: 'auth/login', component: Login },
     { path: 'auth/register', component: Register },
     { path: 'error/404', component: Error404 },

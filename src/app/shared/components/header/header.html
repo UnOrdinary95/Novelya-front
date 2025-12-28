@@ -29,12 +29,12 @@
                 Login
             </button>
         } @else {
-            <div class="cart-container">
+            <a routerLink="/cart" class="cart-container">
                 <ng-icon hlm name="lucideShoppingCart" />
                 @if (cartLength() > 0) {
                     <span class="cart-badge">{{ cartLength() }}</span>
                 }
-            </div>
+            </a>
             <button hlmBtn (click)="logout()">
                 <ng-icon hlm size="sm" name="lucideLogOut" />
                 Logout

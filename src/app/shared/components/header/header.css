@@ -3,6 +3,8 @@
     display: inline-flex;
     align-items: center;
     cursor: pointer;
+    text-decoration: none;
+    color: inherit;
 }
 
 .cart-badge {
