@@ -68,29 +68,21 @@
                         </svg>
                         Out of Stock
                     </button>
+                } @else if (isInCart()) {
+                    <button
+                        class="w-full rounded-none bg-muted px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-destructive hover:text-destructive-foreground transition-colors flex items-center justify-center"
+                        (click)="toggleCart()"
+                    >
+                        <ng-icon hlm size="sm" name="lucideCheck" class="mr-2" />
+                        Added
+                    </button>
                 } @else {
                     <button
-                        class="w-full rounded-none bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity duration-200 hover:opacity-90"
+                        class="w-full rounded-none bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity duration-200 hover:opacity-90 flex items-center justify-center"
                         [attr.aria-label]="'Add ' + lightNovel().title + ' to cart'"
+                        (click)="toggleCart()"
                     >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            class="mr-2 inline"
-                        >
-                            <circle cx="9" cy="21" r="1"></circle>
-                            <circle cx="20" cy="21" r="1"></circle>
-                            <path
-                                d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"
-                            ></path>
-                        </svg>
+                        <ng-icon hlm size="sm" name="lucideShoppingCart" class="mr-2" />
                         Add to cart
                     </button>
                 }

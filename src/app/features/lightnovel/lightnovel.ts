@@ -5,12 +5,15 @@ import { toSignal, toObservable } from '@angular/core/rxjs-interop';
 import { switchMap, catchError, of } from 'rxjs';
 import { LightNovel } from '@core/models/LightNovel';
 import { LightNovelService } from '@core/services/lightnovel/lightnovel.service';
+import { CartService } from '@core/services/cart/cart.service';
+import { UserService } from '@core/services/user/user.service';
 import { environment } from '@environments/environment';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { HlmButton } from '@spartan-ng/helm/button';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { HlmIcon } from '@spartan-ng/helm/icon';
-import { lucideShoppingCart, lucideArrowLeft, lucideCalendar, lucideUser, lucideStar } from '@ng-icons/lucide';
+import { lucideShoppingCart, lucideArrowLeft, lucideCalendar, lucideUser, lucideStar, lucideCheck } from '@ng-icons/lucide';
+import { toast } from 'ngx-sonner';
 
 @Component({
     selector: 'app-lightnovel',
@@ -24,12 +27,15 @@ import { lucideShoppingCart, lucideArrowLeft, lucideCalendar, lucideUser, lucide
             lucideCalendar,
             lucideUser,
             lucideStar,
+            lucideCheck,
         }),
     ],
 })
 export class Lightnovel {
     private router = inject(Router);
     private lightNovelService = inject(LightNovelService);
+    private cartService = inject(CartService);
+    private userService = inject(UserService);
 
     id = input.required<string>();
 
@@ -55,11 +61,38 @@ export class Lightnovel {
         return ln ? !ln.inStock : false;
     });
 
+    isInCart = computed(() => {
+        const cart = this.userService.currentUser()?.cart ?? [];
+        const ln = this.lightNovel();
+        return ln ? cart.some(item => item.lightNovelId === ln._id) : false;
+    });
+
     goBack(): void {
         window.history.back();
     }
 
     getGenreRoute(genre: string): string {
         return genre.toLowerCase().replace(/ /g, '-');
+    }
+
+    toggleCart() {
+        const id = this.lightNovel()?._id;
+        if (!id) return;
+
+        const isRemoving = this.isInCart();
+        const title = this.lightNovel()?.title ?? '';
+
+        this.cartService.updateCart(id, isRemoving ? -1 : 1).subscribe({
+            next: () => {
+                toast.success(isRemoving ? 'Removed from cart' : 'Added to cart', {
+                    description: title,
+                });
+            },
+            error: () => {
+                toast.error('Failed to update cart', {
+                    description: 'Please try again later',
+                });
+            },
+        });
     }
 }

@@ -5,9 +5,10 @@ import { Observable, tap, catchError, of } from 'rxjs';
 import { LoginResponse } from '../../models/loginResponse';
 import { RegisterResponse } from '../../models/registerResponse';
 import { LogoutResponse } from '../../models/logoutResponse';
-import { CurrentUserResponse } from '../../models/currentUserResponse';
 import { RegisterInput } from '../../models/RegisterInput';
 import { LoginInput } from '../../models/LoginInput';
+import { ApiResponse } from '../../models/ApiResponse';
+import { User } from '../../models/User';
 
 @Injectable({
     providedIn: 'root',
@@ -44,22 +45,20 @@ export class AuthService {
         );
     }
 
-    checkAuth(): Observable<CurrentUserResponse | null> {
-        return this.httpClient.get<CurrentUserResponse>(`${this.apiUrl}/users/me`).pipe(
+    checkAuth(): Observable<User | ApiResponse> {
+        return this.httpClient.get<User | ApiResponse>(`${this.apiUrl}/users/me`).pipe(
             tap((response) => {
-                if (response.id) {
+                if ('_id' in response && response._id) {
                     this.isAuthenticated.set(true);
-                    this.currentUserId.set(response.id);
-                }
-                if (response.isAdmin) {
-                    this.isAdmin.set(true);
+                    this.currentUserId.set(response._id);
+                    this.isAdmin.set(response.isAdmin ?? false);
                 }
             }),
-            catchError(() => {
+            catchError((error) => {
                 this.isAuthenticated.set(false);
                 this.isAdmin.set(false);
                 this.currentUserId.set('');
-                return of(null); // Retourne un observable de valeur nulle en cas d'erreur
+                return of(error.error);
             }),
         );
     }

@@ -4,11 +4,11 @@ import { Header } from './shared/components/header/header';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
 import { AuthService } from './core/services/auth/auth.service';
-import { environment } from '../environments/environment.prod';
+import { HlmToaster } from './shared/libs/ui/sonner/src';
 
 @Component({
     selector: 'app-root',
-    imports: [RouterOutlet, Header],
+    imports: [RouterOutlet, Header, HlmToaster],
     templateUrl: './app.html',
     styleUrl: './app.css',
 })

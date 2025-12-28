@@ -73,11 +73,22 @@
                             <ng-icon hlm size="sm" name="lucideShoppingCart" />
                             Out of Stock
                         </button>
+                    } @else if (isInCart()) {
+                        <button
+                            hlmBtn
+                            variant="secondary"
+                            class="w-full sm:w-auto px-8 py-3 text-base gap-2 hover:bg-destructive hover:text-destructive-foreground transition-colors"
+                            (click)="toggleCart()"
+                        >
+                            <ng-icon hlm size="sm" name="lucideCheck" />
+                            Added
+                        </button>
                     } @else {
                         <button
                             hlmBtn
                             class="w-full sm:w-auto px-8 py-3 text-base gap-2"
                             [attr.aria-label]="'Add ' + ln.title + ' to cart'"
+                            (click)="toggleCart()"
                         >
                             <ng-icon hlm size="sm" name="lucideShoppingCart" />
                             Add to cart

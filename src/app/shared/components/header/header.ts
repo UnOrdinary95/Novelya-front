@@ -12,6 +12,7 @@ import {
 } from '@ng-icons/lucide';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { CartService } from '../../../core/services/cart/cart.service';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
@@ -32,8 +33,10 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 })
 export class Header {
     private router = inject(Router);
+    private cartService = inject(CartService);
     authService = inject(AuthService);
     isAuthenticated: Signal<boolean> = this.authService.isAuthenticated;
+    cartLength = this.cartService.cartLength;
     searchForm = new FormGroup({
         searchQuery: new FormControl(''),
     });
