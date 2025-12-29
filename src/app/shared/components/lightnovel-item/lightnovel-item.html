@@ -20,9 +20,15 @@
             size="icon"
             variant="secondary"
             class="size-8 absolute right-2 top-2 z-10 rounded-full bg-background/80 p-2 opacity-0 transition-opacity duration-300 hover:bg-background group-hover:opacity-100"
-            (click)="$event.preventDefault(); $event.stopPropagation()"
+            (click)="$event.preventDefault(); $event.stopPropagation(); toggleWishlist()"
         >
-            <ng-icon hlm size="sm" name="lucideStar" />
+            <ng-icon
+                hlm
+                size="sm"
+                name="lucideStar"
+                [class.fill-yellow-500]="isInWishlist()"
+                [class.text-yellow-500]="isInWishlist()"
+            />
         </button>
     </a>
 

@@ -47,4 +47,10 @@ export class UserService {
             tap(() => this.refreshCurrentUser())
         );
     }
+
+    updateWishlist(lightNovelId: string): Observable<ApiResponse> {
+        return this.http.patch<ApiResponse>(`${this.apiUrl}/users/${this.currentUser()?._id}/wishlist`, { lightNovelId }).pipe(
+            tap(() => this.refreshCurrentUser())
+        );
+    }
 }

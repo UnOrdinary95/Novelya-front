@@ -37,6 +37,12 @@ export class LightnovelItem {
         return cart.some(item => item.lightNovelId === this.lightNovel()._id);
     });
 
+    isInWishlist = computed(() => {
+        const wishlist = this.userService.currentUser()?.wishlist ?? [];
+        const id = this.lightNovel()._id;
+        return id ? wishlist.includes(id) : false;
+    });
+
     toggleCart() {
         const id = this.lightNovel()._id;
         if (!id) return;
@@ -52,6 +58,27 @@ export class LightnovelItem {
             },
             error: () => {
                 toast.error('Failed to update cart', {
+                    description: 'Please try again later',
+                });
+            },
+        });
+    }
+
+    toggleWishlist() {
+        const id = this.lightNovel()._id;
+        if (!id) return;
+
+        const isRemoving = this.isInWishlist();
+        const title = this.lightNovel().title;
+
+        this.userService.updateWishlist(id).subscribe({
+            next: () => {
+                toast.success(isRemoving ? 'Removed from wishlist' : 'Added to wishlist', {
+                    description: title,
+                });
+            },
+            error: () => {
+                toast.error('Failed to update wishlist', {
                     description: 'Please try again later',
                 });
             },
