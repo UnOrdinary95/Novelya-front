@@ -174,7 +174,7 @@ export class Lightnovel {
         });
     }
 
-    // Admin Logic
+    // Logique Admin
     isAdmin = computed(() => this.userService.currentUser()?.isAdmin || false);
     availableGenres = availableGenres;
 
@@ -262,16 +262,16 @@ export class Lightnovel {
             genres: this.editForm.controls.genres.value || [],
         };
 
-        // Can be refactor with switchMap
+        // Peut être refactorisé avec switchMap
         this.lightNovelService.updateLightNovel(id, updatedData as LightNovel).subscribe({
             next: () => {
-                // If cover file selected, patch it
+                // Si une image de couverture est sélectionnée, on la met à jour
                 if (this.selectedCoverFile()) {
                     this.lightNovelService.patchCover(id, this.selectedCoverFile()!).subscribe({
                         next: () => {
                             toast.success('Light novel updated successfully!');
                             dialogRef.close();
-                            // Refresh page to show updated data
+                            // Rafraîchir la page pour afficher les données mises à jour
                             window.location.reload();
                         },
                         error: (err) => {

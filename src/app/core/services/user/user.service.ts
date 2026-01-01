@@ -36,6 +36,10 @@ export class UserService {
         });
     }
 
+    getAllUsers(): Observable<User[]> {
+        return this.http.get<User[]>(`${this.apiUrl}/users`);
+    }
+
     getUserById(id: string): Observable<User> {
         return this.http.get<User>(`${this.apiUrl}/users/${id}`);
     }
@@ -67,5 +71,13 @@ export class UserService {
                 map(() => response)
             ))
         );
+    }
+    
+    updateUserById(userId: string, newUserData: UpdateUserInput): Observable<ApiResponse> {
+        return this.http.put<ApiResponse>(`${this.apiUrl}/users/${userId}`, newUserData);
+    }
+
+    deleteUserById(userId: string): Observable<ApiResponse> {
+        return this.http.delete<ApiResponse>(`${this.apiUrl}/users/${userId}`);
     }
 }

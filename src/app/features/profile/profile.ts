@@ -2,6 +2,7 @@ import { Component, computed, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../core/services/user/user.service';
+import { User } from '../../core/models/User';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { toast } from 'ngx-sonner';
 import { HlmTabsImports } from '@spartan-ng/helm/tabs';
@@ -15,7 +16,7 @@ import { BrnDialogImports } from '@spartan-ng/brain/dialog';
 import { HlmAlertDialogImports } from '@spartan-ng/helm/alert-dialog';
 import { BrnAlertDialogImports } from '@spartan-ng/brain/alert-dialog';
 import { provideIcons, NgIcon } from '@ng-icons/core';
-import { lucideSettings, lucideStar, lucideTrash, lucideUser, lucideMail, lucideLock } from '@ng-icons/lucide';
+import { lucideSettings, lucideStar, lucideTrash, lucideUser, lucideMail, lucideLock, lucideShield } from '@ng-icons/lucide';
 import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
 import { PurchaseHistoryItem } from '../../core/models/PurchaseHistoryItem';
 import { UpdateUserInput } from '../../core/models/updateUserInput';
@@ -26,6 +27,7 @@ import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { EnrichedPurchaseHistoryItem } from '../../core/models/EnrichedPurchaseHistoryItem';
 import { CartItemWithDetails } from '../../core/models/CartItemWithDetails';
+import { getUserInitials } from '@shared/helpers/user.helper';
 
 @Component({
     selector: 'app-profile',
@@ -43,7 +45,7 @@ import { CartItemWithDetails } from '../../core/models/CartItemWithDetails';
         HlmFieldLabel
     ],
     providers: [
-        provideIcons({ lucideSettings, lucideStar, lucideTrash, lucideUser, lucideMail, lucideLock })
+        provideIcons({ lucideSettings, lucideStar, lucideTrash, lucideUser, lucideMail, lucideLock, lucideShield })
     ],
     templateUrl: './profile.html',
     styleUrl: './profile.css',
@@ -56,18 +58,25 @@ export class Profile {
 
     user = this.userService.currentUser;
 
-    initials = computed(() => {
-        const u = this.user();
-        if (!u || !u.name) return '';
-        const names = u.name.split(' ');
-        if (names.length >= 2) {
-            return (names[0][0] + names[names.length - 1][0]).toUpperCase();
-        }
-        return u.name.substring(0, 2).toUpperCase();
-    });
+    initials = computed(() => getUserInitials(this.user()?.name));
 
     wishlistLNs = signal<LightNovel[]>([]);
     enrichedHistory = signal<EnrichedPurchaseHistoryItem[]>([]);
+
+    // État admin
+    allUsers = signal<User[]>([]);
+    selectedUser = signal<User | null>(null);
+    isAdminLoading = signal(false);
+    adminErrorMessage = signal<string>('');
+
+    adminEditForm = new FormGroup({
+        name: new FormControl('', [
+            Validators.required,
+            Validators.minLength(3),
+            Validators.pattern('^[a-zA-Z_\\- ]+$'),
+        ]),
+        email: new FormControl('', [Validators.required, Validators.email]),
+    });
 
     constructor() {
         effect(() => {
@@ -241,4 +250,79 @@ export class Profile {
             return total + (item.lightNovel.price * item.cartItem.quantity);
         }, 0);
     });
+
+    // Méthodes admin
+    loadAllUsers() {
+        this.isAdminLoading.set(true);
+        this.userService.getAllUsers().subscribe({
+            next: (users) => {
+                // Filtrer les utilisateurs admin
+                const nonAdminUsers = users.filter(u => !u.isAdmin);
+                this.allUsers.set(nonAdminUsers);
+                this.isAdminLoading.set(false);
+            },
+            error: () => {
+                toast.error('Failed to load users');
+                this.isAdminLoading.set(false);
+            }
+        });
+    }
+
+    openUserEditDialog(user: User) {
+        this.selectedUser.set(user);
+        this.adminErrorMessage.set('');
+        this.adminEditForm.patchValue({
+            name: user.name,
+            email: user.email
+        });
+    }
+
+    getUserInitials = getUserInitials;
+
+    updateUser() {
+        const user = this.selectedUser();
+        if (!user || !user._id || this.adminEditForm.invalid) return;
+
+        this.isAdminLoading.set(true);
+        const updateInput: UpdateUserInput = {
+            name: this.adminEditForm.value.name?.trim() || '',
+            email: this.adminEditForm.value.email?.trim() || '',
+        };
+
+        this.userService.updateUserById(user._id, updateInput).subscribe({
+            next: (response) => {
+                toast.success(response?.message || 'User updated successfully');
+                this.isAdminLoading.set(false);
+                this.loadAllUsers();
+            },
+            error: (error) => {
+                this.isAdminLoading.set(false);
+                if (error.status === 409) {
+                    this.adminErrorMessage.set('An account with this email already exists.');
+                } else {
+                    this.adminErrorMessage.set('Failed to update user. Please try again.');
+                }
+                toast.error('Failed to update user');
+            }
+        });
+    }
+
+    deleteUser() {
+        const user = this.selectedUser();
+        if (!user || !user._id) return;
+
+        this.isAdminLoading.set(true);
+        this.userService.deleteUserById(user._id).subscribe({
+            next: (response) => {
+                toast.success(response?.message || 'User deleted successfully');
+                this.isAdminLoading.set(false);
+                this.selectedUser.set(null);
+                this.loadAllUsers();
+            },
+            error: () => {
+                this.isAdminLoading.set(false);
+                toast.error('Failed to delete user');
+            }
+        });
+    }
 }

@@ -12,6 +12,206 @@
             <p class="text-muted-foreground">{{ user()?.email }}</p>
         </div>
 
+        <!-- Admin Dialog -->
+        @if (user()?.isAdmin) {
+            <hlm-dialog>
+                <button
+                    brnDialogTrigger
+                    hlmBtn
+                    class="bg-transparent border-none text-foreground hover:bg-transparent shadow-none"
+                    size="icon"
+                    (click)="loadAllUsers()"
+                >
+                    <ng-icon hlm size="lg" name="lucideShield" />
+                </button>
+                <hlm-dialog-content
+                    class="sm:max-w-[500px] flex flex-col max-h-[80vh]"
+                    *brnDialogContent="let adminCtx"
+                >
+                    <hlm-dialog-header>
+                        <h3 hlmDialogTitle>User Management</h3>
+                        <p hlmDialogDescription>Click on a user to edit their information.</p>
+                    </hlm-dialog-header>
+
+                    <div class="flex-1 overflow-y-auto pr-2 -mr-2">
+                        @if (isAdminLoading() && allUsers().length === 0) {
+                            <div class="flex justify-center p-4">
+                                <span class="text-muted-foreground">Loading users...</span>
+                            </div>
+                        } @else {
+                            <div class="flex flex-col gap-2">
+                                @for (u of allUsers(); track u._id) {
+                                    <hlm-dialog>
+                                        <button
+                                            class="flex w-full text-left items-center gap-4 p-3 border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
+                                            brnDialogTrigger
+                                            (click)="openUserEditDialog(u)"
+                                        >
+                                            <hlm-avatar
+                                                variant="medium"
+                                                class="w-10 h-10 text-sm shrink-0"
+                                            >
+                                                <span
+                                                    class="bg-primary text-primary-foreground"
+                                                    hlmAvatarFallback
+                                                >
+                                                    {{ getUserInitials(u.name) }}
+                                                </span>
+                                            </hlm-avatar>
+                                            <div class="flex-1 min-w-0">
+                                                <p class="font-medium truncate">{{ u.name }}</p>
+                                                <p class="text-sm text-muted-foreground truncate">
+                                                    {{ u.email }}
+                                                </p>
+                                            </div>
+                                        </button>
+
+                                        <!-- User Edit Dialog -->
+                                        <hlm-dialog-content
+                                            class="sm:max-w-[425px]"
+                                            *brnDialogContent="let editCtx"
+                                        >
+                                            <hlm-dialog-header>
+                                                <h3 hlmDialogTitle>Edit User</h3>
+                                                <p hlmDialogDescription>
+                                                    Modify user information below. Click update when
+                                                    you're done.
+                                                </p>
+                                            </hlm-dialog-header>
+
+                                            <form
+                                                [formGroup]="adminEditForm"
+                                                (ngSubmit)="updateUser(); editCtx.close()"
+                                                class="grid gap-4 py-4"
+                                            >
+                                                @if (adminErrorMessage()) {
+                                                    <p class="text-red-500 text-sm text-center">
+                                                        {{ adminErrorMessage() }}
+                                                    </p>
+                                                }
+                                                <hlm-field-group>
+                                                    <hlm-field>
+                                                        <label hlmFieldLabel for="admin-name"
+                                                            >Name</label
+                                                        >
+                                                        <input
+                                                            hlmInput
+                                                            id="admin-name"
+                                                            formControlName="name"
+                                                            placeholder="Name"
+                                                        />
+                                                        @if (
+                                                            adminEditForm.get('name')?.invalid &&
+                                                            adminEditForm.get('name')?.touched
+                                                        ) {
+                                                            <p class="text-red-500 text-sm">
+                                                                Name must contain only letters,
+                                                                hyphens, and underscores.
+                                                            </p>
+                                                        }
+                                                    </hlm-field>
+
+                                                    <hlm-field>
+                                                        <label hlmFieldLabel for="admin-email"
+                                                            >Email</label
+                                                        >
+                                                        <input
+                                                            hlmInput
+                                                            id="admin-email"
+                                                            formControlName="email"
+                                                            type="email"
+                                                            placeholder="Email"
+                                                        />
+                                                        @if (
+                                                            adminEditForm.get('email')?.invalid &&
+                                                            adminEditForm.get('email')?.touched
+                                                        ) {
+                                                            <p class="text-red-500 text-sm">
+                                                                Please enter a valid email address.
+                                                            </p>
+                                                        }
+                                                    </hlm-field>
+                                                </hlm-field-group>
+
+                                                <hlm-dialog-footer
+                                                    class="sm:justify-between items-center mt-2"
+                                                >
+                                                    <!-- Delete Account Alert -->
+                                                    <hlm-alert-dialog>
+                                                        <button
+                                                            hlmBtn
+                                                            variant="destructive"
+                                                            brnAlertDialogTrigger
+                                                            type="button"
+                                                        >
+                                                            Delete Account
+                                                        </button>
+                                                        <hlm-alert-dialog-content
+                                                            *brnAlertDialogContent="let deleteCtx"
+                                                        >
+                                                            <hlm-alert-dialog-header>
+                                                                <h3 hlmAlertDialogTitle>
+                                                                    Are you absolutely sure?
+                                                                </h3>
+                                                                <p hlmAlertDialogDescription>
+                                                                    This action cannot be undone.
+                                                                    This will permanently delete
+                                                                    this user's account and remove
+                                                                    their data from our servers.
+                                                                </p>
+                                                            </hlm-alert-dialog-header>
+                                                            <hlm-alert-dialog-footer>
+                                                                <button
+                                                                    hlmAlertDialogCancel
+                                                                    (click)="deleteCtx.close()"
+                                                                >
+                                                                    Cancel
+                                                                </button>
+                                                                <button
+                                                                    hlmAlertDialogAction
+                                                                    (click)="
+                                                                        deleteUser();
+                                                                        deleteCtx.close();
+                                                                        editCtx.close()
+                                                                    "
+                                                                    class="bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-colors"
+                                                                >
+                                                                    Delete Account
+                                                                </button>
+                                                            </hlm-alert-dialog-footer>
+                                                        </hlm-alert-dialog-content>
+                                                    </hlm-alert-dialog>
+
+                                                    <button
+                                                        hlmBtn
+                                                        type="submit"
+                                                        [disabled]="
+                                                            isAdminLoading() ||
+                                                            adminEditForm.invalid
+                                                        "
+                                                    >
+                                                        {{
+                                                            isAdminLoading()
+                                                                ? 'Updating...'
+                                                                : 'Update'
+                                                        }}
+                                                    </button>
+                                                </hlm-dialog-footer>
+                                            </form>
+                                        </hlm-dialog-content>
+                                    </hlm-dialog>
+                                } @empty {
+                                    <p class="text-muted-foreground text-center py-4">
+                                        No users found.
+                                    </p>
+                                }
+                            </div>
+                        }
+                    </div>
+                </hlm-dialog-content>
+            </hlm-dialog>
+        }
+
         <!-- Settings Dialog -->
         <hlm-dialog>
             <button

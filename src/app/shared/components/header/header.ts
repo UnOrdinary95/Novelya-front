@@ -33,6 +33,7 @@ import { BrnPopoverImports } from '@spartan-ng/brain/popover';
 import { toast } from 'ngx-sonner';
 import { switchMap, of } from 'rxjs';
 import { LightNovel, availableGenres as genres } from '../../../core/models/LightNovel';
+import { getUserInitials } from '@shared/helpers/user.helper';
 
 @Component({
     selector: 'app-header',
@@ -80,21 +81,13 @@ export class Header {
 
     isAdmin = computed(() => this.userService.currentUser()?.isAdmin ?? false);
 
-    userInitials = computed(() => {
-        const user = this.userService.currentUser();
-        if (!user || !user.name) return '';
-        const names = user.name.split(' ');
-        if (names.length >= 2) {
-            return (names[0][0] + names[names.length - 1][0]).toUpperCase();
-        }
-        return user.name.substring(0, 2).toUpperCase();
-    });
+    userInitials = computed(() => getUserInitials(this.userService.currentUser()?.name));
 
     searchForm = new FormGroup({
         searchQuery: new FormControl(''),
     });
 
-    // Admin Create Form
+    // Formulaire de création Admin
     createForm = new FormGroup({
         title: new FormControl('', Validators.required),
         author: new FormControl('', Validators.required),
