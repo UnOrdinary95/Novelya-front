@@ -1,23 +1,60 @@
-import { Component, inject, input, computed } from '@angular/core';
+import { Component, inject, input, computed, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { toSignal, toObservable } from '@angular/core/rxjs-interop';
 import { switchMap, catchError, of } from 'rxjs';
-import { LightNovel } from '@core/models/LightNovel';
+import { ReactiveFormsModule, FormGroup, FormControl, Validators } from '@angular/forms';
+import { LightNovel, availableGenres } from '@core/models/LightNovel';
 import { LightNovelService } from '@core/services/lightnovel/lightnovel.service';
 import { CartService } from '@core/services/cart/cart.service';
 import { UserService } from '@core/services/user/user.service';
 import { environment } from '@environments/environment';
-import { HlmBadgeImports } from '@spartan-ng/helm/badge';
-import { HlmButton } from '@spartan-ng/helm/button';
+import { HlmBadgeImports } from '@shared/libs/ui/badge/src';
+import { HlmButton } from '@shared/libs/ui/button/src';
 import { NgIcon, provideIcons } from '@ng-icons/core';
-import { HlmIcon } from '@spartan-ng/helm/icon';
-import { lucideShoppingCart, lucideArrowLeft, lucideCalendar, lucideUser, lucideStar, lucideCheck } from '@ng-icons/lucide';
+import { HlmIcon } from '@shared/libs/ui/icon/src';
+import { HlmDialogImports } from '@shared/libs/ui/dialog/src';
+import { BrnDialogImports, BrnDialogRef } from '@spartan-ng/brain/dialog';
+import { HlmAlertDialogImports } from '@shared/libs/ui/alert-dialog/src';
+import { BrnAlertDialogImports } from '@spartan-ng/brain/alert-dialog';
+import { HlmInputImports } from '@shared/libs/ui/input/src';
+import { HlmLabelImports } from '@shared/libs/ui/label/src';
+import { HlmSwitchImports } from '@shared/libs/ui/switch/src';
+import { HlmCheckboxImports } from '@shared/libs/ui/checkbox/src';
+import { HlmCalendarImports } from '@shared/libs/ui/calendar/src';
+import { HlmField } from '@shared/libs/ui/field/src';
+import { HlmPopoverImports } from '@shared/libs/ui/popover/src';
+import { BrnPopoverImports } from '@spartan-ng/brain/popover';
+import { HlmSelectImports } from '@shared/libs/ui/select/src';
+import { lucideShoppingCart, lucideArrowLeft, lucideCalendar, lucideUser, lucideStar, lucideCheck, lucideEdit, lucideTrash, lucideUpload, lucideChevronDown } from '@ng-icons/lucide';
 import { toast } from 'ngx-sonner';
 
 @Component({
     selector: 'app-lightnovel',
-    imports: [CommonModule, CurrencyPipe, DatePipe, RouterLink, HlmBadgeImports, HlmButton, NgIcon, HlmIcon],
+    imports: [
+        CommonModule,
+        CurrencyPipe,
+        DatePipe,
+        RouterLink,
+        ReactiveFormsModule,
+        HlmBadgeImports,
+        HlmButton,
+        NgIcon,
+        HlmIcon,
+        HlmDialogImports,
+        BrnDialogImports,
+        HlmInputImports,
+        HlmLabelImports,
+        HlmSwitchImports,
+        HlmCheckboxImports,
+        HlmCalendarImports,
+        HlmField,
+        HlmPopoverImports,
+        BrnPopoverImports,
+        HlmSelectImports,
+        HlmAlertDialogImports,
+        BrnAlertDialogImports
+    ],
     templateUrl: './lightnovel.html',
     styleUrl: './lightnovel.css',
     providers: [
@@ -28,6 +65,10 @@ import { toast } from 'ngx-sonner';
             lucideUser,
             lucideStar,
             lucideCheck,
+            lucideEdit,
+            lucideTrash,
+            lucideUpload,
+            lucideChevronDown
         }),
     ],
 })
@@ -129,6 +170,139 @@ export class Lightnovel {
                 toast.error('Failed to update wishlist', {
                     description: 'Please try again later',
                 });
+            },
+        });
+    }
+
+    // Admin Logic
+    isAdmin = computed(() => this.userService.currentUser()?.isAdmin || false);
+    availableGenres = availableGenres;
+
+    editForm = new FormGroup({
+        title: new FormControl('', Validators.required),
+        author: new FormControl('', Validators.required),
+        price: new FormControl(0, [Validators.required, Validators.min(0)]),
+        inStock: new FormControl(false),
+        description: new FormControl(''),
+        genres: new FormControl<string[]>([]),
+        releaseDate: new FormControl<Date | null>(null)
+    });
+
+    previewCover = signal<string | null>(null);
+
+    openAdminModal() {
+        const ln = this.lightNovel();
+        if (ln) {
+            this.editForm.patchValue({
+                title: ln.title,
+                author: ln.author,
+                price: ln.price,
+                inStock: ln.inStock,
+                description: ln.description,
+                genres: ln.genres || [],
+                releaseDate: ln.releaseDate ? new Date(ln.releaseDate) : null
+            });
+            this.previewCover.set(ln.cover);
+        }
+    }
+
+    selectedCoverFile = signal<File | null>(null);
+
+    onFileSelected(event: Event) {
+        const input = event.target as HTMLInputElement;
+        if (input.files && input.files[0]) {
+            const file = input.files[0];
+            this.selectedCoverFile.set(file);
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                this.previewCover.set(e.target?.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    triggerFileInput() {
+        document.getElementById('coverInput')?.click();
+    }
+
+    toggleGenre(genre: string) {
+        const currentGenres = this.editForm.value.genres || [];
+        const index = currentGenres.indexOf(genre);
+        let newGenres: string[];
+
+        if (index === -1) {
+            newGenres = [...currentGenres, genre];
+        } else {
+            newGenres = currentGenres.filter(g => g !== genre);
+        }
+
+        this.editForm.patchValue({ genres: newGenres });
+    }
+
+    isGenreSelected(genre: string): boolean {
+        return (this.editForm.value.genres || []).includes(genre);
+    }
+
+    updateLightNovel(dialogRef: BrnDialogRef) {
+        if (!this.editForm.valid) {
+            toast.error('Please fill in all required fields');
+            return;
+        }
+
+        const id = this.lightNovel()?._id;
+        if (!id) return;
+
+        const updatedData: Partial<LightNovel> = {
+            title: this.editForm.controls.title.value!,
+            author: this.editForm.controls.author.value!,
+            price: this.editForm.controls.price.value!,
+            inStock: this.editForm.controls.inStock.value!,
+            description: this.editForm.controls.description.value || '',
+            releaseDate: this.editForm.controls.releaseDate.value || undefined,
+            genres: this.editForm.controls.genres.value || [],
+        };
+
+        // Can be refactor with switchMap
+        this.lightNovelService.updateLightNovel(id, updatedData as LightNovel).subscribe({
+            next: () => {
+                // If cover file selected, patch it
+                if (this.selectedCoverFile()) {
+                    this.lightNovelService.patchCover(id, this.selectedCoverFile()!).subscribe({
+                        next: () => {
+                            toast.success('Light novel updated successfully!');
+                            dialogRef.close();
+                            // Refresh page to show updated data
+                            window.location.reload();
+                        },
+                        error: (err) => {
+                            toast.error('Failed to update cover');
+                            console.error(err);
+                        }
+                    });
+                } else {
+                    toast.success('Light novel updated successfully!');
+                    dialogRef.close();
+                    window.location.reload();
+                }
+            },
+            error: (err) => {
+                toast.error('Failed to update light novel');
+                console.error(err);
+            },
+        });
+    }
+
+    deleteLightNovel() {
+        const id = this.lightNovel()?._id;
+        if (!id) return;
+
+        this.lightNovelService.deleteLightNovel(id).subscribe({
+            next: () => {
+                toast.success('Light novel deleted successfully!');
+            },
+            error: (err) => {
+                toast.error('Failed to delete light novel');
+                console.error(err);
             },
         });
     }

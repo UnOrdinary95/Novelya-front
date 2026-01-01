@@ -78,6 +78,21 @@
       ],
       "@spartan-ng/helm/avatar": [
         "./src/app/shared/libs/ui/avatar/src/index.ts"
+      ],
+      "@spartan-ng/helm/calendar": [
+        "./src/app/shared/libs/ui/calendar/src/index.ts"
+      ],
+      "@spartan-ng/helm/switch": [
+        "./src/app/shared/libs/ui/switch/src/index.ts"
+      ],
+      "@spartan-ng/helm/select": [
+        "./src/app/shared/libs/ui/select/src/index.ts"
+      ],
+      "@spartan-ng/helm/dropdown-menu": [
+        "./src/app/shared/libs/ui/dropdown-menu/src/index.ts"
+      ],
+      "@spartan-ng/helm/popover": [
+        "./src/app/shared/libs/ui/popover/src/index.ts"
       ]
     }
   },
