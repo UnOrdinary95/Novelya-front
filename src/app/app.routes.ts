@@ -8,6 +8,7 @@ import { Genre } from './features/genre/genre';
 import { Search } from './features/search/search';
 import { Lightnovel } from './features/lightnovel/lightnovel';
 import { Cart } from './features/cart/cart';
+import { Profile } from './features/profile/profile';
 import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
@@ -20,5 +21,7 @@ export const routes: Routes = [
     { path: 'auth/register', component: Register },
     { path: 'error/404', component: Error404 },
     { path: 'error/403', component: Error403 },
+    { path: 'profile', component: Profile, canActivate: [authGuard] },
     { path: '**', redirectTo: 'error/404' },
 ];
+

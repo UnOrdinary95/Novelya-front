@@ -35,6 +35,13 @@
                     <span class="cart-badge">{{ cartLength() }}</span>
                 }
             </a>
+            <a routerLink="/profile">
+                <hlm-avatar variant="medium">
+                    <span class="bg-primary text-primary-foreground" hlmAvatarFallback>
+                        {{ userInitials() }}
+                    </span>
+                </hlm-avatar>
+            </a>
             <button hlmBtn (click)="logout()">
                 <ng-icon hlm size="sm" name="lucideLogOut" />
                 Logout

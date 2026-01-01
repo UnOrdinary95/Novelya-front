@@ -1,6 +1,6 @@
 import { Component, input, computed, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, CurrencyPipe } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 import { LightNovel } from '@core/models/LightNovel';
@@ -29,6 +29,7 @@ import { toast } from 'ngx-sonner';
 export class LightnovelItem {
     private cartService = inject(CartService);
     private userService = inject(UserService);
+    private router = inject(Router);
 
     lightNovel = input.required<LightNovel>();
     isOutOfStock = computed(() => !this.lightNovel().inStock);
@@ -44,6 +45,11 @@ export class LightnovelItem {
     });
 
     toggleCart() {
+        if (!this.userService.currentUser()) {
+            this.router.navigate(['/auth/login']);
+            return;
+        }
+
         const id = this.lightNovel()._id;
         if (!id) return;
 
@@ -65,6 +71,11 @@ export class LightnovelItem {
     }
 
     toggleWishlist() {
+        if (!this.userService.currentUser()) {
+            this.router.navigate(['/auth/login']);
+            return;
+        }
+
         const id = this.lightNovel()._id;
         if (!id) return;
 

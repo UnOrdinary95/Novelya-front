@@ -82,6 +82,11 @@ export class Lightnovel {
     }
 
     toggleCart() {
+        if (!this.userService.currentUser()) {
+            this.router.navigate(['/auth/login']);
+            return;
+        }
+
         const id = this.lightNovel()?._id;
         if (!id) return;
 
@@ -103,6 +108,11 @@ export class Lightnovel {
     }
 
     toggleWishlist() {
+        if (!this.userService.currentUser()) {
+            this.router.navigate(['/auth/login']);
+            return;
+        }
+
         const id = this.lightNovel()?._id;
         if (!id) return;
 

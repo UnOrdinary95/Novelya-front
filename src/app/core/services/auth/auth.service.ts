@@ -9,12 +9,14 @@ import { RegisterInput } from '../../models/RegisterInput';
 import { LoginInput } from '../../models/LoginInput';
 import { ApiResponse } from '../../models/ApiResponse';
 import { User } from '../../models/User';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root',
 })
 export class AuthService {
     private httpClient = inject(HttpClient);
+    private router = inject(Router);
     private readonly apiUrl = environment.apiUrl;
 
     currentUserId = signal<string>('');
@@ -41,6 +43,7 @@ export class AuthService {
                 // Ici, la deconnexion a pour side effect de mettre à jour les signaux à false
                 this.isAuthenticated.set(false);
                 this.isAdmin.set(false);
+                this.currentUserId.set('');
             }),
         );
     }
